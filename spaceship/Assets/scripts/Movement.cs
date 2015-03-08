@@ -14,7 +14,7 @@ public class Movement : MonoBehaviour {
 	float Mspeed;
 	bool accelerate;
     public int score;
-
+    
 	public int health = 100;
 	public int power = 2;
 	GameObject cam;
