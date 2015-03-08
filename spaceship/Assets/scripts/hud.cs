@@ -7,6 +7,7 @@ public class hud : MonoBehaviour {
 	Rect crosshairpos;
 	Rect healthpos;
 	Rect speedpos;
+    Rect scorepos;
 	Movement move;
 	Rigidbody rig;
 	Font font;
@@ -22,6 +23,8 @@ public class hud : MonoBehaviour {
 		healthpos = new Rect (Screen.width - 30 - healthsize.x, Screen.height - 30 - healthsize.y, healthsize.x, healthsize.y);
 		Vector2 speedsize = style.CalcSize (new GUIContent ("Speed: 100kph"));
 		speedpos = new Rect (30, Screen.height - 30 - speedsize.y, speedsize.x, speedsize.y);
+        Vector2 scoresize = style.CalcSize(new GUIContent("Score: 100"));
+        scorepos = new Rect(100,100,100,100);
 	}
 	void OnGUI()
 	{
@@ -29,5 +32,6 @@ public class hud : MonoBehaviour {
 
 		GUI.Label(healthpos, "Health: " + move.health.ToString (),style);
 		GUI.Label(speedpos, "Speed: " +(int) rig.velocity.magnitude*10 + "kph",style);
+        GUI.Label(scorepos, "Score: " + move.score,style);
 	}
 }

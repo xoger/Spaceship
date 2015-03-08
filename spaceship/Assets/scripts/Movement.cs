@@ -13,6 +13,7 @@ public class Movement : MonoBehaviour {
 	float Rspeed;
 	float Mspeed;
 	bool accelerate;
+    public int score;
 
 	public int health = 100;
 	public int power = 2;
@@ -51,14 +52,7 @@ public class Movement : MonoBehaviour {
 		else {
 			AI ();
 		}
-		for (int i = 0;i<Bullets.Count;i++)
-		{
-			Bullets[i].update();
-			if (Bullets[i].Bullet == null){
-				Bullets.RemoveAt(i);
-				i -=1;
-			}
-		}
+        
 	}
 	void Move () {
         transform.rotation *= Quaternion.Euler (Vaxis * Rspeed, Haxis * Rspeed, 0);
@@ -101,36 +95,6 @@ public class Movement : MonoBehaviour {
 		Move ();
 
 	}
-	bullet Bullet;
-	public Transform bullet;
-	List<bullet> Bullets = new List<bullet>();
-	float shoottimer;
-	void shoot()
-	{
-		shoottimer += Time.deltaTime;
-		if (gameObject.name == "player") {
-
-			if (shoottimer >= 0.3f)
-			{
-				if (Input.GetKey (KeyCode.LeftControl) == true || Input.GetButton("shoot")){
-					Bullets.Add (ScriptableObject.CreateInstance ("bullet") as bullet);
-					Bullets [Bullets.Count - 1].init (50, this.gameObject, bullet, power);
-					shoottimer = 0;
-				}
-			}
-		} 
-		else {
-
-			if (shoottimer >= 0.3f)
-			{
-				Bullets.Add (ScriptableObject.CreateInstance ("bullet") as bullet);
-				Bullets [Bullets.Count - 1].init (50, this.gameObject, bullet, power);
-				shoottimer = 0;
-			}
-
-		}
-
-	}
 
 	float hitscantimer;
 	public GameObject trail;
@@ -149,6 +113,8 @@ public class Movement : MonoBehaviour {
 			{
 				target = hit.transform.GetComponent ("Movement") as Movement;
 				target.health -= power;
+                if (target.health <= 0)
+                    score += 100;
 			}
 			Trail = Instantiate(trail,transform.position + transform.forward * 2,Quaternion.LookRotation(shootangle)) as GameObject;
 			Trail.rigidbody.velocity=(Trail.transform.forward *50000);
@@ -157,36 +123,6 @@ public class Movement : MonoBehaviour {
 		}
 
 
-	}
-	bullet colbullet;
-	void OnCollisionEnter (Collision col)
-	{
-		GameObject[]players = GameObject.FindGameObjectsWithTag("Player");
-
-		if (col.gameObject.tag == "bullet")
-		{
-			bool finished = false;
-			foreach (GameObject bo in players)
-			{
-				Movement move = bo.GetComponent("Movement")as Movement;
-				foreach (bullet go in move.Bullets)
-				{
-					if (go.Bullet != null && go.Bullet.gameObject == col.gameObject)
-					{
-						colbullet = go;
-						finished = true;
-						break;
-					}
-				}
-				if (colbullet.Firer.gameObject != this.gameObject)
-				{
-					health -= colbullet.power;
-					Destroy(col.gameObject);
-				}
-				if (finished == true)
-					break;
-			}
-		}
 	}
 }
 
